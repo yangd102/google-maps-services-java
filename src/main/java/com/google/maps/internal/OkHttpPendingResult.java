@@ -182,7 +182,7 @@ public class OkHttpPendingResult<T, R extends ApiResponse<T>>
     if (r.response != null) {
       return parseResponse(r.request, r.response);
     } else {
-      metrics.endRequest(r.e, 0, retryCounter);
+      metrics.endRequest(r.e, 0, retryCounter, RequestMetrics.METRO_NONE);
       throw r.e;
     }
   }
@@ -205,7 +205,7 @@ public class OkHttpPendingResult<T, R extends ApiResponse<T>>
   public void onFailure(Call call, IOException ioe) {
     metrics.endNetwork();
     if (callback != null) {
-      metrics.endRequest(ioe, 0, retryCounter);
+      metrics.endRequest(ioe, 0, retryCounter, RequestMetrics.METRO_NONE);
       callback.onFailure(ioe);
     }
   }
@@ -227,10 +227,10 @@ public class OkHttpPendingResult<T, R extends ApiResponse<T>>
       throws ApiException, InterruptedException, IOException {
     try {
       T result = parseResponseInternal(request, response);
-      metrics.endRequest(null, response.code(), retryCounter);
+      metrics.endRequest(null, response.code(), retryCounter, response.header(RequestMetrics.METRO_HEADER, RequestMetrics.METRO_NONE));
       return result;
     } catch (Exception e) {
-      metrics.endRequest(e, response.code(), retryCounter);
+      metrics.endRequest(e, response.code(), retryCounter, RequestMetrics.METRO_NONE);
       throw e;
     }
   }

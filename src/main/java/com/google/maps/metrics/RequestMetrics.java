@@ -18,10 +18,12 @@ package com.google.maps.metrics;
  * network latency
  */
 public interface RequestMetrics {
+  static final String METRO_NONE = "";
+  static final String METRO_HEADER = "x-goog-maps-metro-area";
 
   void startNetwork();
 
   void endNetwork();
 
-  void endRequest(Exception exception, int httpStatusCode, long retryCount);
+  void endRequest(Exception exception, int httpStatusCode, long retryCount, String metro);
 }

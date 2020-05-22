@@ -149,10 +149,10 @@ public class GaePendingResult<T, R extends ApiResponse<T>> implements PendingRes
       throws IOException, ApiException, InterruptedException {
     try {
       T result = parseResponseInternal(request, response);
-      metrics.endRequest(null, response.getResponseCode(), retryCounter);
+      metrics.endRequest(null, response.getResponseCode(), retryCounter, getHeader(response, RequestMetrics.METRO_HEADER, RequestMetrics.METRO_NONE));
       return result;
     } catch (Exception e) {
-      metrics.endRequest(e, response.getResponseCode(), retryCounter);
+      metrics.endRequest(e, response.getResponseCode(), retryCounter, RequestMetrics.METRO_NONE);
       throw e;
     }
   }
@@ -240,6 +240,15 @@ public class GaePendingResult<T, R extends ApiResponse<T>> implements PendingRes
         throw e;
       }
     }
+  }
+
+  private static String getHeader(HTTPResponse response, String headerName, String defaultValue) {
+    for (HTTPHeader header : response.getHeaders()) {
+      if (header.getName().equals(headerName)) {
+        return header.getValue();
+      }
+    }
+    return defaultValue;
   }
 
   private T retry() throws IOException, ApiException, InterruptedException {

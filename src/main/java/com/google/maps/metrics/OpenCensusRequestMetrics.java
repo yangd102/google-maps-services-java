@@ -37,7 +37,7 @@ final class OpenCensusRequestMetrics implements RequestMetrics {
   }
 
   @Override
-  public void endRequest(Exception exception, int httpStatusCode, long retryCount) {
+  public void endRequest(Exception exception, int httpStatusCode, long retryCount, String metro) {
     // multiple endRequest are ignored
     if (this.finished) {
       return;
@@ -52,6 +52,7 @@ final class OpenCensusRequestMetrics implements RequestMetrics {
             .putLocal(
                 OpenCensusMetrics.Tags.HTTP_CODE, TagValue.create(Integer.toString(httpStatusCode)))
             .putLocal(OpenCensusMetrics.Tags.API_STATUS, TagValue.create(exceptionName(exception)))
+            .putLocal(OpenCensusMetrics.Tags.METRO_AREA, TagValue.create(metro))
             .build();
     statsRecorder
         .newMeasureMap()

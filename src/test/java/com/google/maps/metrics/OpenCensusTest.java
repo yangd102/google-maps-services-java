@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import com.google.maps.internal.ApiConfig;
 import com.google.maps.metrics.OpenCensusMetrics;
 import com.google.maps.metrics.OpenCensusRequestMetricsReporter;
+import com.google.maps.metrics.RequestMetrics;
 import com.google.maps.model.GeocodingResult;
 import io.opencensus.stats.AggregationData;
 import io.opencensus.stats.Stats;
@@ -59,6 +60,7 @@ public class OpenCensusTest {
     if (status != null) {
       response.setBody("{\"results\" : [{}], \"status\" : \"" + status + "\" }");
     }
+    response.setHeader(RequestMetrics.METRO_HEADER, "test-metro");
     response.setBodyDelay(delayMs, TimeUnit.MILLISECONDS);
     return response;
   }
@@ -92,7 +94,7 @@ public class OpenCensusTest {
     assertEquals(1, result.length);
 
     List<TagValue> tags =
-        Arrays.asList(TagValue.create(""), TagValue.create("200"), TagValue.create("/path"));
+        Arrays.asList(TagValue.create(""), TagValue.create("200"), TagValue.create("test-metro"), TagValue.create("/path"));
 
     Map.Entry<List<TagValue>, AggregationData> latencyMetric =
         getMetric("maps.googleapis.com/client/request_latency");

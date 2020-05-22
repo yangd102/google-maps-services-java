@@ -25,6 +25,7 @@ public final class OpenCensusMetrics {
     public static final TagKey REQUEST_NAME = TagKey.create("request_name");
     public static final TagKey HTTP_CODE = TagKey.create("http_code");
     public static final TagKey API_STATUS = TagKey.create("api_status");
+    public static final TagKey METRO_AREA = TagKey.create("metro_area");
   }
 
   public static final class Measures {
@@ -73,7 +74,7 @@ public final class OpenCensusMetrics {
     private Views() {}
 
     private static final List<TagKey> fields =
-        tags(Tags.REQUEST_NAME, Tags.HTTP_CODE, Tags.API_STATUS);
+        tags(Tags.REQUEST_NAME, Tags.HTTP_CODE, Tags.API_STATUS, Tags.METRO_AREA);
 
     public static final View REQUEST_COUNT =
         View.create(
